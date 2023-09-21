@@ -1,29 +1,29 @@
-#import socket module
 from socket import *
-import sys # In order to terminate the program
+import sys
 
 from lxml import html
 import requests
 
-
+serverName = 'server'
 serverPort = 6789
 serverSocket = socket(AF_INET, SOCK_STREAM) 
+
 #Prepare a sever socket
-#Fill in start
-serverSocket.bind(('', serverPort))
+serverSocket.bind((serverName, serverPort))
 serverSocket.listen(1)
-print('The server is ready to receive')
-#Fill in end
+print('----- The server is ready to receive -----')
 
 while True:
-    #Establish the connection 
-    print('Ready to serve...') 
-    # TODO: Fill in
-    connectionSocket, addr = None, None
+    connectionSocket, addr = serverSocket.accept()
+    # decode the message from the client (normally a link to the page)
+    link_to_the_page = connectionSocket.recv(1024).decode()
+    
     try:
-        message = #Fill in start #Fill in end filename = message.split()[1]
+        message = None #Fill in start #Fill in end
+        filename = message.split()[1]
         f = open(filename[1:])
-        outputdata = #Fill in start #Fill in end #Send one HTTP header line into socket
+        outputdata = #Fill in start #Fill in end 
+        #Send one HTTP header line into socket
         #Fill in start
         #Fill in end
         #Send the content of the requested file to the client for i in range(0, len(outputdata)):
@@ -32,11 +32,13 @@ while True:
         
     except IOError:
         #Send response message for file not found
-            #Fill in start
+        #Fill in start
+        # TODO: is this sending an HTTP file?
+        connectionSocket.send('404 Not Found')
         #Fill in end
+        
         #Close client socket
-                #Fill in start
-        #Fill in end
-        pass
+        connectionSocket.close()
+
 serverSocket.close()
 sys.exit()#Terminate the program after sending the corresponding data
