@@ -25,7 +25,7 @@ while True:
 
         # Send the content of the requested file to the client
         for i in range(0, len(outputdata)):
-            connectionSocket.send(outputdata[i].encode())  # Encode each character as bytes
+            connectionSocket.send(outputdata[i].encode()) # Encode as bytes
 
         connectionSocket.close()
         
