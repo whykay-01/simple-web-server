@@ -1,44 +1,41 @@
 from socket import *
 import sys
 
-from lxml import html
-import requests
-
-serverName = 'server'
 serverPort = 6789
 serverSocket = socket(AF_INET, SOCK_STREAM) 
 
-#Prepare a sever socket
-serverSocket.bind((serverName, serverPort))
+# Prepare a server socket
+serverSocket.bind(('127.0.0.1', serverPort))
 serverSocket.listen(1)
 print('----- The server is ready to receive -----')
 
 while True:
     connectionSocket, addr = serverSocket.accept()
-    # decode the message from the client (normally a link to the page)
-    link_to_the_page = connectionSocket.recv(1024).decode()
-    
+    print('----- Connection established -----')
     try:
-        message = None #Fill in start #Fill in end
+        message = connectionSocket.recv(1024)
         filename = message.split()[1]
+        
         f = open(filename[1:])
-        outputdata = #Fill in start #Fill in end 
-        #Send one HTTP header line into socket
-        #Fill in start
-        #Fill in end
-        #Send the content of the requested file to the client for i in range(0, len(outputdata)):
-        connectionSocket.send(outputdata[i].encode()) connectionSocket.send("\r\n".encode())
-        connectionSocket.close() 
+        outputdata = f.read()
+
+        # Send one HTTP header line into socket
+        response = b'HTTP/1.1 200 OK\r\n\r\n'  # Encode as bytes
+        connectionSocket.send(response)
+
+        # Send the content of the requested file to the client
+        for i in range(0, len(outputdata)):
+            connectionSocket.send(outputdata[i].encode())  # Encode each character as bytes
+
+        connectionSocket.close()
         
     except IOError:
-        #Send response message for file not found
-        #Fill in start
-        # TODO: is this sending an HTTP file?
-        connectionSocket.send('404 Not Found')
-        #Fill in end
+        # Send response message for file not found
+        response = b'HTTP/1.1 404 Not Found\r\n\r\n'  # Encode as bytes
+        connectionSocket.send(response)
         
-        #Close client socket
+        # Close client socket
         connectionSocket.close()
 
 serverSocket.close()
-sys.exit()#Terminate the program after sending the corresponding data
+sys.exit()  # Terminate the program after sending the corresponding data
